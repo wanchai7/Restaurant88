@@ -16,6 +16,22 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }))
 
+const authRouter = require('./routers/auth.router')
+
+const db = require('./models/index')
+const role = db.Role;
+
+const initRole = () => {
+  role.create({ id: 1, name: "user"})
+  role.create({ id: 2, name: "moderator"})
+  role.create({ id: 3, name: "admin"})
+}
+
+// db.sequelize.sync({ force: true }).then(() => {
+//   initRole();
+//   console.log("Drop and Sync")
+// })
+
 // แปลง จาก string(text) เป็น json
 app.use(express.json());
 // tooltip
@@ -27,6 +43,7 @@ app.get("/", (req, res) => {
 
 // use routers
 app.use("/api/v1/restaurant", restaurantRouter);
+app.use('/api/v1/auth', authRouter)
 
 app.listen(PORT, () => {
   console.log(`Listening to http://localhost:${PORT}`);
