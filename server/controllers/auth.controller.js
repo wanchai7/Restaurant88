@@ -65,11 +65,13 @@ authController.signIn = async (req, res) => {
     .then((user) => {
         if(!user){
             res.status(404).json({ message: "User Not Found!"})
+            return;
         }
 
         const passwordIsValid = bcrypt.compareSync(password, user.password)
         if(!passwordIsValid) {
             res.status(401).json({ message: "Password invalid!"})
+            return;
         }
 
         // Valid User

@@ -48,7 +48,7 @@ restaurantController.getAll = async (req, res) => {
     })
   }catch(e){
     res.status(500).send({
-      message: error.message || "Something error while getting all restaurant"
+      message: e.message || "Something error while getting all restaurant"
     })
   }
 }
