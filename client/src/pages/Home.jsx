@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Restaurants from '../components/Restaurants'
+import Swal from 'sweetalert2'
+import RestaurantService from '../services/retaurant.service'
 
 const Home = () => {
 
@@ -8,23 +10,24 @@ const Home = () => {
   const [filteredRestaurant, setFilteredRestaurant] = useState([])
 
   useEffect(() => {
-
     // call api: GetAllRestaurants
-    fetch('http://localhost:5000/api/v1/restaurant')
-    .then((res) => {
-      // convert to json format
-      return res.json()
-    })
-    .then((resp) => {
-      // save to state
-      console.log(resp)
-      setRestaurants(resp)
-      setFilteredRestaurant(resp)
-    })
-    .catch((e) => {
-      // catch error
-      console.log(e.message)
-    })
+    const getAllRestaurant = async () => {
+      try{
+        const response = await RestaurantService.getAllRestaurants()
+
+        if (response.status === 200) {
+          setRestaurants(response.data)
+          setFilteredRestaurant(response.data)
+        }
+      }catch(error) {
+        Swal.fire({
+          title: "Get All restaurants",
+          icon: "error",
+          text: error?.response?.data?.message || error.message
+        })
+      }
+    }
+    getAllRestaurant()
 
   }, [])
 
