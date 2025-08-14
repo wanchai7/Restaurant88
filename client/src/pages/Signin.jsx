@@ -1,47 +1,46 @@
 import { useState } from "react";
+import AuthService from "../services/auth.service";
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router'
 
 const Signin = () => {
   const [signin, setSignin] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    // how to rename must to use : เช่น name: newName
+    const { name, value } = e.target; // destructure object
+    // ... spread operator
+    // ...signin copy ค่าเดิม [name]: value ค่าใหม่
     setSignin({ ...signin, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // หยุด form จากการ reload
+  const handleSubmit = async () => {
 
     try {
-      const response = await fetch('http://localhost:5000/api/v1/auth/signin', {
-        method: "POST",
-        body: JSON.stringify(signin),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
+      const currentUser = await AuthService.login(signin.username, signin.password)
 
-      const data = await response.json(); // แปลง response เป็น json
-
-      if (response.ok) {
-        console.log("Token:", data.token); // ✅ แสดง token
-        localStorage.setItem('token', data.token); // ✅ เก็บ token
-
-        alert("Sign in successfully!");
-
-        setSignin({
-          username: '',
-          password: ''
-        });
-      } else {
-        alert("Sign in failed: " + data.message);
+      if (currentUser.status === 200) {
+        Swal.fire({
+          title: "User Login",
+          text: "Login Successfully!",
+          icon: "success"
+        }).then(() => {
+          navigate('/')
+        })
       }
     } catch (error) {
-      console.error("Error:", error);
+      Swal.fire({
+        title: "User Login",
+        text: error?.response?.data?.message || error.message,
+        icon: "error",
+      })
     }
-  };
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-12">
@@ -52,9 +51,12 @@ const Signin = () => {
           </h2>
         </div>
 
-        <form className="space-y-6">
+        <form>
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
               Username
             </label>
             <input
@@ -64,13 +66,17 @@ const Signin = () => {
               autoComplete="username"
               required
               onChange={handleChange}
+              // sync two way
               value={signin.username}
               className="mt-2 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -87,7 +93,10 @@ const Signin = () => {
 
           <div className="flex items-center justify-between">
             <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+              <a
+                href="#"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
                 Forgot password?
               </a>
             </div>
@@ -95,7 +104,7 @@ const Signin = () => {
 
           <div>
             <button
-              type="submit"
+              type="button"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
               onClick={handleSubmit}
             >
@@ -105,14 +114,17 @@ const Signin = () => {
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          Not an account?{' '}
-          <a href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+          Not an account?{" "}
+          <a
+            href="/signup"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
             Start a 14 day free trial
           </a>
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default Signin;
