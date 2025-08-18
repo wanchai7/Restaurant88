@@ -2,9 +2,11 @@ import React from 'react'
 import { useAuthContext } from '../context/AuthContext'
 import UserProfile from './UserProfile'
 
+
 const Navbar = () => {
   const { user } = useAuthContext()
-  console.log(user)
+  // console.log(user)
+  
   const menuItems = [
     {
       "name": "Search",
@@ -20,6 +22,8 @@ const Navbar = () => {
     },
   ]
 
+  // if (user?.authorities.includes('ROLES_USER')) {
+  // }
 
   return (
     <div className="navbar bg-base-100 shadow-sm">

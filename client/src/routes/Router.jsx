@@ -5,6 +5,11 @@ import Home from '../pages/Home'
 import Update from '../pages/Update'
 import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
+import NotAllowed from "../pages/NotAllowed";
+import AdminPage from "../pages/AdminPage";
+import UserPage from "../pages/UserPage";
+import Profile from "../pages/Profile";
+import AdminAndModerator from "../pages/AdminAndModerator";
 
 const router = createBrowserRouter([
     {
@@ -13,11 +18,19 @@ const router = createBrowserRouter([
     },
     {
         path: "/update/:id",
-        element: <Update />
+        element: (
+            <AdminAndModerator>
+                <Update />
+            </AdminAndModerator>
+        )
     },
     {
         path: "/add",
-        element: <AddRestaurant />
+        element: (
+            <AdminPage>
+                <AddRestaurant />
+            </AdminPage>
+        )
     },
     {
         path: "/signin",
@@ -26,6 +39,18 @@ const router = createBrowserRouter([
     {
         path: "/signup",
         element: <Signup />
+    },
+    {
+        path: "/notallowed",
+        element: <NotAllowed />
+    },
+    {
+        path: "/profile",
+        element: (
+            <UserPage>
+                <Profile />
+            </UserPage>
+        )
     }
 ])
 

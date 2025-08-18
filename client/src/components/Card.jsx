@@ -1,5 +1,13 @@
 import React, { useState } from "react";
+
+import { useAuthContext } from '../context/AuthContext'
+
 const Card = ({ id, name, type, imageUrl }) => {
+  const { user } = useAuthContext()
+
+  // const role = user?.authorities
+  // console.log(role.includes('ROLES_ADMIN'))
+
   const deleted = async (id) => {
     try {
       // async await
@@ -78,15 +86,39 @@ const Card = ({ id, name, type, imageUrl }) => {
         <p>{type}</p>
         <div className="card-actions justify-end">
           {/* <div onClick={() => deleted(id)} className="badge badge-outline">Delete</div> */}
-          <div onClick={handleDelete} className="badge badge-outline">
-            Delete
+          {
+            user && user.authorities.includes('ROLES_ADMIN') &&
+            (
+            <div>
+              <div onClick={handleDelete} className="badge badge-outline">
+                Delete
+              </div>
+              <a
+                href={`/update/${id}`}
+                className="badge badge-outline cursor-pointer"
+              >
+                Edit
+              </a>
           </div>
-          <a
+          
+            )
+          }
+          {/* USER */}
+          {
+            user.authorities.includes('ROLES_USER') && <div onClick={handleDelete} className="badge badge-outline">
+            Buy
+          </div>
+          }
+          {/* MODERATOR */}
+          {
+            user.authorities.includes('ROLES_MODERATOR') && <a
             href={`/update/${id}`}
             className="badge badge-outline cursor-pointer"
           >
             Edit
           </a>
+          }
+          
           {showConfirm && (
             <ConfirmDialog
               message="ต้องการลบหรือไม่"

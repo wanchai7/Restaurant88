@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Drop from '../components/Drop'
-
+import { useAuthContext } from '../context/AuthContext'
+import { useNavigate } from 'react-router'
 
 
 const AddRestaurant = () => {
+    const { user } = useAuthContext()
 
     const [restaurant, setRestaurant] = useState({
         name: '',
         type: '',
         imageUrl: ''
     });
+
+    const navigate = useNavigate()
+    
+        useEffect(() => {
+            if (!user?.authorities.includes('ROLES_ADMIN') && !user?.authorities.includes('ROLES_MODERATOR')) {
+                navigate('/')
+            }
+        }, [user])
 
     const handleChange = (e) => {
         const { name, value } = e.target

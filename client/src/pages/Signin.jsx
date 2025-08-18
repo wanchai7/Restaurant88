@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AuthService from "../services/auth.service";
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router'
+import { useAuthContext } from '../context/AuthContext'
 
 const Signin = () => {
   const [signin, setSignin] = useState({
@@ -10,6 +11,15 @@ const Signin = () => {
   });
 
   const navigate = useNavigate()
+
+  // : rename
+  const { login: loginFn, user } = useAuthContext()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [user])
 
   const handleChange = (e) => {
     // how to rename must to use : เช่น name: newName
@@ -30,6 +40,7 @@ const Signin = () => {
           text: "Login Successfully!",
           icon: "success"
         }).then(() => {
+          loginFn(currentUser.data)
           navigate('/')
         })
       }

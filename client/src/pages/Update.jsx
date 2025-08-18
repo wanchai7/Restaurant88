@@ -2,13 +2,22 @@ import React, { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Drop from '../components/Drop'
 import { useParams } from 'react-router'
-
+import { useAuthContext } from '../context/AuthContext'
+import { useNavigate } from 'react-router'
 
 const Update = () => {
+    const { user } = useAuthContext()
 
     // 1. Get from url
     const { id } = useParams()
 
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!user?.authorities.includes('ROLES_ADMIN') && !user?.authorities.includes('ROLES_MODERATOR')) {
+            navigate('/')
+        }
+    }, [user])
    
 
     const [restaurant, setRestaurant] = useState({
@@ -32,8 +41,6 @@ const Update = () => {
                 // catch error
                 console.log(e.message)
             })
-
-
     }, [id])
 
     const handleChange = (e) => {
