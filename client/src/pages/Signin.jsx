@@ -58,7 +58,7 @@ const Signin = () => {
       <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-md">
         <div className="text-center">
           <h2 className="mt-6 text-2xl font-bold text-gray-800">
-            Sign in to your account
+             🍴 เข้าสู่ระบบ 🍴 
           </h2>
         </div>
 

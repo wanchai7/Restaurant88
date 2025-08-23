@@ -51,7 +51,7 @@ const Signup = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-12">
       <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-md">
         <div className="text-center">
-          <h2 className="mt-6 text-2xl font-bold text-gray-800">Register</h2>
+          <h2 className="mt-6 text-2xl font-bold text-gray-800"> 🍴 สมัครสมาชิก  🍴 </h2>
         </div>
 
         <form className="space-y-6">

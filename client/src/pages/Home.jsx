@@ -5,75 +5,79 @@ import Swal from 'sweetalert2'
 import RestaurantService from '../services/retaurant.service'
 
 const Home = () => {
-
   const [restaurants, setRestaurants] = useState([])
   const [filteredRestaurant, setFilteredRestaurant] = useState([])
 
   useEffect(() => {
-    // call api: GetAllRestaurants
     const getAllRestaurant = async () => {
-      try{
+      try {
         const response = await RestaurantService.getAllRestaurants()
-
         if (response.status === 200) {
           setRestaurants(response.data)
           setFilteredRestaurant(response.data)
         }
-      }catch(error) {
+      } catch (error) {
         Swal.fire({
-          title: "Get All restaurants",
-          icon: "error",
-          text: error?.response?.data?.message || error.message
+          title: 'เกิดข้อผิดพลาด',
+          icon: 'error',
+          text: error?.response?.data?.message || error.message,
         })
       }
     }
     getAllRestaurant()
-
   }, [])
 
   const handleSearch = (keyword) => {
     if (keyword === '') {
       setFilteredRestaurant(restaurants)
-      return;
+      return
     }
 
     const result = restaurants.filter((restaurant) => {
       return (
-        restaurant.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()) ||
-        restaurant.type.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
+        restaurant.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        restaurant.type.toLowerCase().includes(keyword.toLowerCase())
       )
     })
     setFilteredRestaurant(result)
-    // console.log(result)
   }
 
   return (
-    <div className='container mx-auto'>
+    <div className="min-h-screen bg-base-200">
       {/* Navigation */}
+
       {/* Header */}
-      <div>
-        <h1 className='justify-center text-3xl text-center m-5 p-5'>รายการร้านอาหาร เครื่องดื่ม</h1>
+      <div className="hero bg-primary text-primary-content py-10">
+        <div className="hero-content text-center">
+          <div className="max-w-md">
+            <h1 className="text-5xl font-bold">🍽️ รายการร้านอาหาร & เครื่องดื่ม</h1>
+            <p className="py-6 text-lg">ค้นหาร้านอร่อยใกล้คุณได้ที่นี่</p>
+          </div>
+        </div>
       </div>
+
       {/* Search Box */}
-      <div className='mb-5 flex justify-center items-center'>
-        <label className="input flex items-center gap-2 w-2xl">
-          <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor"
-            >
+      <div className="flex justify-center mt-8">
+        <label className="input input-bordered flex items-center gap-2 w-full max-w-xl">
+          <svg className="h-5 w-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="8"></circle>
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input type="search" required placeholder="Search" name='keyword' onChange={(e) => handleSearch(e.target.value)} />
+          <input
+            type="search"
+            placeholder="ค้นหาร้านอาหารหรือประเภทอาหาร..."
+            className="grow"
+            onChange={(e) => handleSearch(e.target.value)}
+          />
         </label>
       </div>
+
       {/* Result */}
-      <Restaurants restaurants={filteredRestaurant} />
+      <div className="px-4 py-10">
+        <Restaurants restaurants={filteredRestaurant} />
+      </div>
     </div>
   )
 }
