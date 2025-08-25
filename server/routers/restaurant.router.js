@@ -4,7 +4,12 @@ const express = require("express");
 const router = express.Router();
 
 // POST http://localhost:5000/api/v1/restaurants
-router.post(`/`, authMiddleware.verifyToken, restaurantController.create);
+router.post(
+  `/`,
+  authMiddleware.verifyToken,
+  authMiddleware.isAdmin,
+  restaurantController.create
+);
 
 // GET http://localhost:5000/api/v1/restaurants
 router.get(`/`, authMiddleware.verifyToken, restaurantController.getAll);
