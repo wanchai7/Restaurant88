@@ -52,7 +52,7 @@ const Home = () => {
       {/* Navigation */}
       {/* Header */}
       <div>
-        <h1 className='justify-center text-3xl text-center m-5 p-5'>Grab Restaurant 666</h1>
+        <h1 className='justify-center text-3xl text-center m-5 p-5'>GrabRestaurant88</h1>
       </div>
       {/* Search Box */}
       <div className='mb-5 flex justify-center items-center'>
@@ -74,6 +74,7 @@ const Home = () => {
       </div>
       {/* Result */}
       <Restaurants restaurants={filteredRestaurant} />
+      
     </div>
   )
 }
