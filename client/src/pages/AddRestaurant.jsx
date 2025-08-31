@@ -4,92 +4,158 @@ import Drop from '../components/Drop'
 import { useAuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router'
 import RestaurantService from '../services/retaurant.service'
+import Swal from 'sweetalert2'
 
 const AddRestaurant = () => {
-    const { user } = useAuthContext()
+  const { user } = useAuthContext()
+  const [restaurant, setRestaurant] = useState({
+    name: '',
+    type: '',
+    imageUrl: ''
+  })
 
-    const [restaurant, setRestaurant] = useState({
-        name: '',
-        type: '',
-        imageUrl: ''
-    });
+  const navigate = useNavigate()
 
-    const navigate = useNavigate()
-    
-        useEffect(() => {
-            if (!user?.authorities.includes('ROLES_ADMIN') && !user?.authorities.includes('ROLES_MODERATOR')) {
-                navigate('/')
-            }
-        }, [user])
-
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setRestaurant({ ...restaurant, [name]: value }) // {...restaurant clone ของเดิม
+  useEffect(() => {
+    if (
+      !user?.authorities.includes('ROLES_ADMIN') &&
+      !user?.authorities.includes('ROLES_MODERATOR')
+    ) {
+      navigate('/')
     }
+  }, [user])
 
-    const handleSubmit = async () => {
-        try {
-            // async await 
-            const response = await RestaurantService.insertRestaurant(restaurant);
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setRestaurant({ ...restaurant, [name]: value })
+  }
 
-            if (response.status === 200){
-                Swal.fire({
-                    title: "Add Restaurant",
-                    text: "Restaurant added successfully!",
-                    icon: "success",
-                })
-                setRestaurant({
-                    name: '',
-                    type: '',
-                    imageUrl: ''
-                })
-            }
-        }catch(e){
-            Swal.fire({
-                title: "Add Restaurants",
-                icon: "error",
-                text: error?.response?.data?.message || e.message
-            })
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await RestaurantService.insertRestaurant(restaurant)
+
+      if (response.status === 200) {
+        Swal.fire({
+          title: 'Add Restaurant',
+          text: 'Restaurant added successfully!',
+          icon: 'success'
+        })
+        setRestaurant({
+          name: '',
+          type: '',
+          imageUrl: ''
+        })
+      }
+    } catch (e) {
+        console.log(e)
+      Swal.fire({
+        title: 'Add Restaurant',
+        icon: 'error',
+        text: e?.response?.data?.message || e.message
+      })
     }
+  }
 
-    return (
-        <>
-            
-            <div className='flex justify-center items-center text-center mt-5'>
-                <form className='border w-[500px] space-y-5 p-10 rounded-2xl shadow-lg shadow-cyan-500/50'>
-                    <div>
-                        Add
-                    </div>
-                    <div className='space-x-2'>
-                        <Drop />
-                        <input value={restaurant.name} onChange={handleChange} className='border outline-none rounded-2xl placeholder:text-cyan-500/50 border-cyan-500/50 pl-3 shadow-lg shadow-cyan-500/50' type="text" name='name' placeholder='name' />
-                    </div>
-                    <div className='space-x-2'>
-                        <Drop />
-                        <input value={restaurant.type} onChange={handleChange} className='border outline-none rounded-2xl placeholder:text-purple-500/50 border-purple-500/50 pl-3 shadow-lg shadow-purple-500/50' type="text" name='type' placeholder='type' />
-                    </div>
-                    <div className='space-x-2'>
-                        <Drop />
-                        <input value={restaurant.imageUrl} onChange={handleChange} className='border outline-none rounded-2xl pl-3 placeholder:text-yellow-500/50 border-yellow-500/50 shadow-lg shadow-yellow-500/50' type="text" name='imageUrl' placeholder='imageUrl' />
-                    </div>
-                    <div className='space-x-2'>
-                        <button type='submit' className='bg-linear-to-r rounded-[2px] shadow-lg shadow-red-500/50 from-red-500 to-pink-500 w-[100px] cursor-pointer'>Cancel</button>
-                        <button onClick={handleSubmit} type='submit' className='bg-linear-to-r rounded-[2px] shadow-lg shadow-blue-500/50 from-blue-500 to-blue-800 w-[100px] cursor-pointer'>Add</button>
-                    </div>
-                    <div>
-                        {
-                            restaurant.imageUrl && (
-                                <div>
-                                    <img className='w-full h-[300px] object-cover' src={restaurant.imageUrl} alt="" />
-                                </div>
-                            )
-                        }
-                    </div>
-                </form>
-            </div>
-        </>
-    )
+  return (
+    <div className="flex justify-center items-center mt-10">
+      <form
+        onSubmit={handleSubmit}
+        className="card w-full max-w-md bg-base-100 shadow-xl p-8 space-y-5 border border-orange-200"
+      >
+        <h2 className="text-3xl font-bold text-center text-orange-600">
+          🍴 Add Restaurant
+        </h2>
+
+        {/* Restaurant Name */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold text-green-700">
+              ชื่อร้าน
+            </span>
+          </label>
+          <div className="flex items-center gap-2">
+            <Drop />
+            <input
+              value={restaurant.name}
+              onChange={handleChange}
+              type="text"
+              name="name"
+              placeholder="ชื่อร้าน"
+              className="input input-bordered w-full input-success"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Type */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold text-green-700">
+              รายละเอียด
+            </span>
+          </label>
+          <div className="flex items-center gap-2">
+            <Drop />
+            <input
+              value={restaurant.type}
+              onChange={handleChange}
+              type="text"
+              name="type"
+              placeholder="รายละเอียด"
+              className="input input-bordered w-full input-accent"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Image URL */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold text-green-700">
+            URL รูปภาพ
+            </span>
+          </label>
+          <div className="flex items-center gap-2">
+            <Drop />
+            <input
+              value={restaurant.imageUrl}
+              onChange={handleChange}
+              type="text"
+              name="imageUrl"
+              placeholder="URL รูปภาพ"
+              className="input input-bordered w-full input-warning"
+            />
+          </div>
+        </div>
+
+        {/* Preview Image */}
+        {restaurant.imageUrl && (
+          <div className="mt-4">
+            <img
+              className="w-full h-48 object-cover rounded-lg border border-orange-300"
+              src={restaurant.imageUrl}
+              alt="Preview"
+            />
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div className="flex justify-end gap-3 pt-4">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="btn btn-outline btn-error"
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn btn-success">
+            Add
+          </button>
+        </div>
+      </form>
+    </div>
+  )
 }
 
 export default AddRestaurant
