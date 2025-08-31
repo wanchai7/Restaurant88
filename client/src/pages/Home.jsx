@@ -74,7 +74,6 @@ const Home = () => {
       </div>
       {/* Result */}
       <Restaurants restaurants={filteredRestaurant} />
-      
     </div>
   )
 }
