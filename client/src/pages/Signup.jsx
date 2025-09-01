@@ -20,7 +20,7 @@ const Signup = () => {
   const handleSubmit = async () => {
     try {
       // async await
-      const newUser = await AuthService.register(user.username, user.name, user.email, user.password);
+      const newUser = await AuthService.register(user.username, user.name, user.password, user.email);
 
       if (newUser.status === 200) {
         Swal.fire({
