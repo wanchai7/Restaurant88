@@ -12,7 +12,7 @@ const cors = require("cors");
 app.use(
   cors({
     // origin ต้นทางมาจากไหนได้บ้าง
-    origin: ["http://localhost:5173", "127.0.0.1:5173"],
+    origin: ["http://localhost:5173", "127.0.0.1:5173",FRONTEND_URL],
     // อุญาติให้ ใช้ method ไรบ้าง หรือ service
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "x-access-token"],
