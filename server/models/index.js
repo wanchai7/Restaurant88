@@ -1,23 +1,24 @@
 const sequelize = require('./db')
-const Sequelize = require('sequelize')
-
+const Sequelize = require('sequelize') //libary
 const User = require('./user.model')
-const Role = require('./role.model');
+import Teacher from './teacher,model';
+import Admin from './admin.model';
+import Judge from './judge.model';
+import VerificationToken from './verificationToken.model';
 
 const db = {};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.User = User
-db.Role = Role
+db.User = User;
+db.Teacher = Teacher;
+db.Admin = Admin;
+db.Judge = Judge;
+db.VerificationToken = VerificationToken;
 
-// association
-db.User.belongsToMany(db.Role, {
-    through: "user_roles"
-})
+//Association
+db.VerificationToken.belongTo(db.User, {foreigKey:"userId"});
+db.User.belongTo(db.VerificationToken, {foreigKey:"userId"});
 
-db.Role.belongsToMany(db.User, {
-    through: "user_roles"
-})
 
 module.exports = db
